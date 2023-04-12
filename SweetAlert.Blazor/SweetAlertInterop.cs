@@ -7,7 +7,11 @@ namespace SweetAlert.Blazor
     internal class SweetAlertInterop : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
-
+        public async ValueTask Initialize()
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("loadSweetAlert");
+        }
         public SweetAlertInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
