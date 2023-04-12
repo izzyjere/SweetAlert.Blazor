@@ -8,10 +8,10 @@ namespace SweetAlert.Blazor
 {
     public enum Severity
     {
-        Default,
         Success,
         Warning,
         Error,
-        Info
+        Info,
+        Question
     }
 }
