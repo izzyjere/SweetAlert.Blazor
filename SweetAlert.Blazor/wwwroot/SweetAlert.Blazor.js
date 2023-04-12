@@ -13,11 +13,37 @@ export function loadSweetAlert() {
     }
 }
 
-export function showAlert(title,message,type) {
-  return prompt(message, 'Type anything here');
+export async function showAlert(title, message, severity) {
+    return await swal(title,message,severity);
 }
-export function showConfirm(title, message,confirmText,cancelText, type, onconfirm) {
-
+export async function showConfirm(title, message, confirmText, cancelText, severity, cancelClass, confirmClass, dangerMode = false) {
+    let confirm = false
+    let result = await swal({
+        title: title,
+        text: message,
+        icon: severity,
+        buttons: {
+            cancel: {
+                text: cancelText,
+                value: null,
+                visible: true,
+                className: cancelClass,
+                closeModal: true,
+            },
+            confirm: {
+                text: confirmText,
+                value: true,
+                visible: true,
+                className: confirmClass,
+                closeModal: true
+            }
+        },
+        dangerMode: dangerMode
+    })
+    if (result) {
+        confirm = true
+    }
+    return confirm
 }
 export function showAlertComplex(swalOptions) {
     return Swal.fire(swalOptions);
