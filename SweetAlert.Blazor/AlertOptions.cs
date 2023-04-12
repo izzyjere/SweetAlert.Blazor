@@ -8,8 +8,8 @@
         public bool ShowConfirmButton { get; set; }
         public bool ShowCloseButton { get; set; }
         public bool AllowEscapeKey { get; set; } = true;
-        public string? ConfirmButtonText { get; internal set; }
-        public string? CancelButtonText { get; internal set; }
-        public string? Icon { get; internal set; }
+        public string? ConfirmButtonText { get; set; }
+        public string? CancelButtonText { get;  set; }
+        public string? Icon { get;  set; }
     }
 }

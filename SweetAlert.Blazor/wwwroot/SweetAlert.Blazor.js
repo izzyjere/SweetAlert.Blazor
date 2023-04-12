@@ -1,6 +1,7 @@
 
 // functions, and may import other JavaScript modules if required.
-export function loadSweetAlert(callback) {
+
+export function loadSweetAlert() {
     const existingScript = document.getElementById('sweetAlert');
 
     if (!existingScript) {
@@ -9,20 +10,15 @@ export function loadSweetAlert(callback) {
         script.id = 'sweetAlert';
         document.body.appendChild(script);
 
-        script.onload = () => {
-            if (callback) callback();
-        };
     }
-
-    if (existingScript && callback) callback();
 }
 
-export function showPrompt(message) {
+export function showAlert(title,message,type) {
   return prompt(message, 'Type anything here');
 }
-export function showAlert(title, message, type) {
+export function showConfirm(title, message,confirmText,cancelText, type, onconfirm) {
 
 }
-export function showAlertComplex(renderFragment) {
-    return swal(renderFragment);
+export function showAlertComplex(swalOptions) {
+    return Swal.fire(swalOptions);
 }

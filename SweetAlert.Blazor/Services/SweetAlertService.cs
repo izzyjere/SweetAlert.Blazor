@@ -21,8 +21,9 @@ namespace SweetAlert.Blazor.Services
         public async Task Show<TComponent>(string? title, AlertOptions? options) where TComponent : IComponent
         {
             options ??= new AlertOptions();
+            title ??= "";
             RenderFragment componentToRender = builder => builder.OpenComponent<TComponent>(0);
-            await sweetAlertInterop.Swal(componentToRender,options);
+            await sweetAlertInterop.Swal(componentToRender,title,options);
         }
        
 
