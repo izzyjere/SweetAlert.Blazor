@@ -7,3 +7,14 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+<button @onclick="ShowAlert" class="btn btn-primary">Ask a question</button>
+@code{
+    async void ShowAlert()
+    {
+        var confirm = await alertService.ShowConfirm("Delete", "Are you sure?", Severity.Question, new AlertOptions{ DangerMode = true, ConfirmButtonText="Delete" });
+        if(confirm)
+        {
+            await alertService.ShowAlert("Success", "Deleted!", Severity.Success);
+        }
+    }
+}

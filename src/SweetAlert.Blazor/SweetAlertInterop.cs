@@ -13,7 +13,11 @@ namespace SweetAlert.Blazor
 
         public event Action<ISweetAlertDialogReference> OnDialogInstanceAdded;
         public event Action<ISweetAlertDialogReference, DialogResult> OnDialogCloseRequested;
-
+        public SweetAlertInterop(IJSRuntime jSRuntime)
+        {
+            moduleTask = new(() => jSRuntime.InvokeAsync<IJSObjectReference>(
+             "import", "./_content/SweetAlert.Blazor/SweetAlert.Blazor.js").AsTask());
+        }
         public async ValueTask Initialize()
         {
             var module = await moduleTask.Value;

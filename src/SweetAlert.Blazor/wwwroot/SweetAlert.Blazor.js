@@ -6,7 +6,7 @@ export function loadSweetAlert() {
 
     if (!existingScript) {
         const script = document.createElement('script');
-        script.src = '_content/SweetAlert.Blazor/lib/sweetalert.min.js';
+        script.src = '_content/SweetAlert.Blazor/lib/sweetalert2.js';
         script.id = 'sweetAlert';
         document.body.appendChild(script);
 
@@ -14,34 +14,26 @@ export function loadSweetAlert() {
 }
 
 export async function showAlert(title, message, severity) {
-    return await swal(title,message,severity);
+    return await Swal.fire(title,message,severity);
 }
 export async function showConfirm(title, message,severity, confirmText, cancelText, confirmClass , cancelClass , dangerMode) {
     let confirm = false
-    let result = await swal({
+    let result = await Swal.fire({
         title: title,
         text: message,
         icon: severity,
-        buttons: {
-            cancel: {
-                text: cancelText,
-                value: null,
-                visible: true,
-                className: cancelClass,
-                closeModal: true,
-            },
-            confirm: {
-                text: confirmText,
-                value: true,
-                visible: true,
-                className: confirmClass,
-                closeModal: true
-            }
-        },
-        dangerMode: dangerMode
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: confirmText,
+        confirmButtonColor: dangerMode ?'#DC3545':'',
+        cancelButtonText: cancelText,
+        customClass: {
+            cancelButton: cancelClass,
+            confirmButton:confirmClass
+        }       
     })
     if (result) {
-        confirm = true
+        confirm = result.isConfirmed
     }
     return confirm
 }
