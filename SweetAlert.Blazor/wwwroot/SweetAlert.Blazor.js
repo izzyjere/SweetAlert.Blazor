@@ -16,7 +16,7 @@ export function loadSweetAlert() {
 export async function showAlert(title, message, severity) {
     return await swal(title,message,severity);
 }
-export async function showConfirm(title, message, confirmText, cancelText, severity, cancelClass, confirmClass, dangerMode = false) {
+export async function showConfirm(title, message,severity, confirmText, cancelText, confirmClass , cancelClass , dangerMode) {
     let confirm = false
     let result = await swal({
         title: title,

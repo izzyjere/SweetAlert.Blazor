@@ -19,11 +19,7 @@ namespace SweetAlert.Blazor
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("loadSweetAlert");
         }
-        public SweetAlertInterop(IJSRuntime jsRuntime)
-        {
-            moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/SweetAlert.Blazor/SweetAlert.Blazor.js").AsTask());
-        }
+       
 
         public async ValueTask<string> Prompt(string message)
         {
@@ -63,11 +59,12 @@ namespace SweetAlert.Blazor
             var html = await module.InvokeAsync<string>("DOMPurify.sanitize", writer.ToString());
 
             return html;
-        }
+        }       
+        public async Task<bool> Dialog(RenderFragment componentToRender, string title ,DialogOptions options)
+        { 
 
-        public async Task<bool> Swal(RenderFragment componentToRender, string title ,DialogOptions options)
-        {
             var module = await moduleTask.Value;
+
             var swalOptions = new
             {
                 title,
@@ -82,6 +79,23 @@ namespace SweetAlert.Blazor
                 allowEscapeKey = options.AllowEscapeKey
             };
            return await module.InvokeAsync<bool>("showAlertComplex", swalOptions);
+        }
+
+        internal void NotifyDialogInstanceAdded(ISweetAlertDialogReference alertReference)
+        {
+            OnDialogInstanceAdded?.Invoke(alertReference);
+        }
+
+        internal async Task<bool> Confirm(string title, string message, Severity severity, AlertOptions options)
+        {
+            var module = await moduleTask.Value;            
+            return await module.InvokeAsync<bool>("showConfirm", title, message, severity.ToString().ToLower(),options.ConfirmButtonText,options.CancelButtonText,options.ConfirmButtonClass,options.CancelButtonClass, options.DangerMode);   
+        }
+
+        internal async Task Alert(string title, string message, Severity severity)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("showAlert", title, message, severity.ToString().ToLower());
         }
     }
 }

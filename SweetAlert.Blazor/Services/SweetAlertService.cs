@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components.RenderTree;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SweetAlert.Blazor.Services
 {
@@ -48,30 +49,91 @@ namespace SweetAlert.Blazor.Services
         {
             this.sweetAlertInterop = sweetAlertInterop;
         }
-
-        public async Task<ISweetAlertDialogReference> Show<TComponent>(string? title, DialogOptions? options) where TComponent : IComponent
-        {
-            var alertReference = CreateReference();
-            options ??= new DialogOptions();
-            title ??= "";
-            RenderFragment componentToRender = builder => builder.OpenComponent<TComponent>(0);
-            alertReference.InjectRenderFragment(componentToRender);
-            var confirmed = await sweetAlertInterop.Swal(componentToRender,title,options);
-            
-            return alertReference;
-        }
+ 
+        
        private ISweetAlertDialogReference CreateReference()
        {
             return new SweetAlertReference(Guid.NewGuid(),this);
        }
-       public void Close(ISweetAlertDialogReference instance)
-       {
+
+        public void Close(ISweetAlertDialogReference instance)
+        {
             throw new NotImplementedException();
-       }
+        }
 
         public void Close(SweetAlertReference sweetAlertReference, DialogResult dialogResult)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title, DialogOptions options)
+        {
+            return await Show(contentComponent, title, options,default);
+        }
+
+        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string? title, DialogOptions? options, DialogParameters? parameters)
+        {
+            if (!typeof(ComponentBase).IsAssignableFrom(contentComponent))
+            {
+                throw new ArgumentException($"{contentComponent?.FullName} must be a Blazor Component");
+            }
+            var alertReference = CreateReference();
+            options ??= new DialogOptions();
+            title ??= "";
+            var dialogContent = DialogHelperComponent.Wrap(new RenderFragment(builder =>
+            {
+                var i = 0;
+                builder.OpenComponent(i++, contentComponent);
+                if(parameters!= null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        builder.AddAttribute(i++, parameter.Key, parameter.Value);
+                    }
+                }               
+                builder.AddComponentReferenceCapture(i++, inst => { alertReference.InjectDialog(inst); });
+                builder.CloseComponent();
+            }));
+            var dialogInstance = new RenderFragment(builder =>
+            {
+                builder.OpenComponent<SweetAlertInstance>(0);
+                builder.SetKey(alertReference.Id);
+                builder.AddAttribute(1, nameof(SweetAlertInstance.Options), options);
+                builder.AddAttribute(2, nameof(SweetAlertInstance.Title), title);
+                builder.AddAttribute(3, nameof(SweetAlertInstance.Content), dialogContent);
+                builder.AddAttribute(4, nameof(SweetAlertInstance.Id), alertReference.Id);
+                builder.CloseComponent();
+            });
+            alertReference.InjectRenderFragment(dialogInstance);
+            sweetAlertInterop.NotifyDialogInstanceAdded(alertReference);
+            var confirmed = await sweetAlertInterop.Dialog(alertReference.RenderFragment, title, options);
+            return alertReference;
+        }
+
+        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title)
+        {
+            return await Show(contentComponent, title,default,default);
+        }
+
+        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogParameters parameters)
+        {
+            return await Show(contentComponent, default, default, parameters);
+        }
+
+        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogOptions options)
+        {
+            return await Show(contentComponent,default, options,default);
+        }
+
+        public Task<bool> ShowConfirm(string title, string message, Severity severity, AlertOptions? options = default)
+        {
+            options ??= new AlertOptions();
+            return sweetAlertInterop.Confirm(title,message,severity,options);
+        }
+
+        public Task ShowAlert(string title, string message, Severity severity)
+        {
+            return sweetAlertInterop.Alert(title,message,severity);
         }
     }
 }
