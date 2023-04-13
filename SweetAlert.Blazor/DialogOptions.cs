@@ -1,6 +1,6 @@
 ﻿namespace SweetAlert.Blazor
 {
-    public class AlertOptions
+    public class DialogOptions
     {
         public Severity Severity { get; set; } 
         public bool AllowOutSideClick { get; set; } = true;

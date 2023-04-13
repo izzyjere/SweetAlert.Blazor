@@ -10,6 +10,10 @@ namespace SweetAlert.Blazor
     internal class SweetAlertInterop : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
+
+        public event Action<ISweetAlertDialogReference> OnDialogInstanceAdded;
+        public event Action<ISweetAlertDialogReference, DialogResult> OnDialogCloseRequested;
+
         public async ValueTask Initialize()
         {
             var module = await moduleTask.Value;
@@ -61,7 +65,7 @@ namespace SweetAlert.Blazor
             return html;
         }
 
-        public async Task Swal(RenderFragment componentToRender, string title ,AlertOptions options)
+        public async Task<bool> Swal(RenderFragment componentToRender, string title ,DialogOptions options)
         {
             var module = await moduleTask.Value;
             var swalOptions = new
@@ -77,7 +81,7 @@ namespace SweetAlert.Blazor
                 allowOutsideClick = options.AllowOutSideClick,
                 allowEscapeKey = options.AllowEscapeKey
             };
-            await module.InvokeAsync<object>("showAlertComplex", swalOptions);
+           return await module.InvokeAsync<bool>("showAlertComplex", swalOptions);
         }
     }
 }
