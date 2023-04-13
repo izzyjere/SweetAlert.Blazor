@@ -17,7 +17,7 @@ namespace SweetAlert.Blazor.Services
         Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, string title);
         Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, DialogParameters parameters);
         Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, DialogOptions options);
-        Task<bool> ShowConfirm(string title, string message, Severity severity);
+        Task<bool> ShowConfirm(string title, string message, Severity severity, AlertOptions? options = default);
         Task ShowAlert(string title, string message, Severity severity);
     }
 }
