@@ -64,7 +64,7 @@ namespace SweetAlert.Blazor
 
             return html;
         }       
-        public async Task<bool> Dialog(RenderFragment content ,DialogOptions options, RenderFragment? header, RenderFragment? footer)
+        private async Task<bool> Dialog(RenderFragment content ,DialogOptions options, RenderFragment? header, RenderFragment? footer)
         { 
 
             var module = await moduleTask.Value;
@@ -88,6 +88,7 @@ namespace SweetAlert.Blazor
 
         internal void NotifyDialogInstanceAdded(ISweetDialogReference alertReference)
         {
+            //TODO: Opening Dialog implementation here.
             OnDialogInstanceAdded?.Invoke(alertReference);
         }
 
@@ -103,6 +104,10 @@ namespace SweetAlert.Blazor
             await module.InvokeVoidAsync("showAlert", title, message, severity.ToString().ToLower());
         }
 
-      
+        internal void NotifyDialogCloseRequested(ISweetDialogReference sweetAlertReference, DialogResult dialogResult)
+        {
+            //TODO: Closing Dialog implementation here.
+            OnDialogCloseRequested?.Invoke(sweetAlertReference, dialogResult);
+        }
     }
 }
