@@ -8,7 +8,9 @@ namespace SweetAlert.Blazor
         public DialogOptions Options { get; set; }
 
         [Parameter]
-        public RenderFragment DialogHeader { get; set; }
+        public RenderFragment DialogHeader { get; set; } 
+        [Parameter]
+        public RenderFragment DialogFooter { get; set; }
 
         [Parameter]
         public Guid Id { get; set; }

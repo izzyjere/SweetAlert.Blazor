@@ -43,9 +43,9 @@ namespace SweetAlert.Blazor.Services
         }
  
         
-       private ISweetDialogReference CreateReference()
+       private ISweetDialogReference CreateReference(DialogOptions options)
        {
-            return new SweetDialogReference(Guid.NewGuid(),this);
+            return new SweetDialogReference(Guid.NewGuid(),this,options);
        }
 
         public void Close(ISweetDialogReference instance)
@@ -68,21 +68,26 @@ namespace SweetAlert.Blazor.Services
             {
                 throw new ArgumentException($"{contentComponent?.FullName} must be a Blazor Component");
             }
-            var dialogReference = CreateReference();
+           
             options ??= new DialogOptions();
-            title ??= "";
+            title ??= ""; 
+            var dialogReference = CreateReference(options);
+            RenderFragment? dialogHeader = null;
+            RenderFragment? dialogFooter = null;
             var dialogContent = DialogHelperComponent.Wrap(new RenderFragment(builder =>
             {
                 var i = 0;
                 builder.OpenComponent(i++, contentComponent);
-                if(parameters!= null)
+                if (parameters != null)
                 {
                     foreach (var parameter in parameters)
                     {
                         builder.AddAttribute(i++, parameter.Key, parameter.Value);
                     }
-                }               
-                builder.AddComponentReferenceCapture(i++, inst => { dialogReference.InjectDialog(inst); });
+                }
+                builder.AddAttribute(i++, nameof(SweetDialog.DialogHeader), (RenderFragment? header) => { dialogHeader = header; });
+                builder.AddAttribute(i++, nameof(SweetDialog.DialogFooter), (RenderFragment? footer) => { dialogFooter = footer; });
+                builder.AddComponentReferenceCapture(i++, dialog => { dialogReference.InjectDialog(dialog); });
                 builder.CloseComponent();
             }));
             var dialogInstance = new RenderFragment(builder =>
@@ -93,10 +98,13 @@ namespace SweetAlert.Blazor.Services
                 builder.AddAttribute(2, nameof(SweetDialogInstance.DialogHeader), title);
                 builder.AddAttribute(3, nameof(SweetDialogInstance.Content), dialogContent);
                 builder.AddAttribute(4, nameof(SweetDialogInstance.Id), dialogReference.Id);
+                builder.AddAttribute(5, nameof(SweetDialogInstance.DialogFooter), dialogReference.Footer);
                 builder.CloseComponent();
             });
-            dialogReference.Options = options;
+            
             dialogReference.InjectRenderFragment(dialogInstance);
+            dialogReference.SetFooter(dialogFooter);
+            dialogReference.SetHeader(dialogHeader);
             sweetAlertInterop.NotifyDialogInstanceAdded(dialogReference);           
             return dialogReference;
         }

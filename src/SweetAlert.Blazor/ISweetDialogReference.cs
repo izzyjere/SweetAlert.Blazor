@@ -6,6 +6,8 @@ namespace SweetAlert.Blazor
     {
         Guid Id { get; }
         RenderFragment RenderFragment { get; }
+        RenderFragment? Header { get; }
+        RenderFragment? Footer { get; }
         void Close();
         void Close(DialogResult dialogResult);
         bool Dismiss(DialogResult dialogResult);
@@ -13,6 +15,8 @@ namespace SweetAlert.Blazor
         void InjectDialog(object instance);
         Task<DialogResult> Result { get; }
         object Dialog { get; }
-        DialogOptions Options { get; set; }
+        DialogOptions Options { get; }
+        internal void SetHeader(RenderFragment? header);
+        internal void SetFooter(RenderFragment? footer);
     }
 }
