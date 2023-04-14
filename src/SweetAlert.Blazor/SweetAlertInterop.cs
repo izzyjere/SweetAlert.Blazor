@@ -10,26 +10,25 @@ namespace SweetAlert.Blazor
     internal class SweetAlertInterop : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
+        private readonly IJSRuntime javaScript;
 
         public event Action<ISweetDialogReference> OnDialogInstanceAdded;
         public event Action<ISweetDialogReference, DialogResult> OnDialogCloseRequested;
         public SweetAlertInterop(IJSRuntime jSRuntime)
         {
-            moduleTask = new(() => jSRuntime.InvokeAsync<IJSObjectReference>(
+            javaScript = jSRuntime;
+            moduleTask = new(() => javaScript.InvokeAsync<IJSObjectReference>(
              "import", "./_content/SweetAlert.Blazor/SweetAlert.Blazor.js").AsTask());
         }
         public async ValueTask Initialize()
         {
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("loadSweetAlert");
+            await module.InvokeVoidAsync("loadPurify");
         }
        
 
-        public async ValueTask<string> Prompt(string message)
-        {
-            var module = await moduleTask.Value;
-            return await module.InvokeAsync<string>("showPrompt", message);
-        }
+        
 
         public async ValueTask DisposeAsync()
         {
@@ -41,8 +40,7 @@ namespace SweetAlert.Blazor
         }
         private async Task<string> ConvertBlazorComponentToHtml(RenderFragment component)
         {
-            var module = await moduleTask.Value;
-
+       
             var builder = new RenderTreeBuilder();
             component(builder);
             var frames = builder.GetFrames().Array;
@@ -60,7 +58,7 @@ namespace SweetAlert.Blazor
                 }
             }
 
-            var html = await module.InvokeAsync<string>("DOMPurify.sanitize", writer.ToString());
+            var html = await javaScript.InvokeAsync<string>("DOMPurify.sanitize", writer.ToString());
 
             return html;
         }       

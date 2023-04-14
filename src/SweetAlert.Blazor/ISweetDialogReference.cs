@@ -16,6 +16,8 @@ namespace SweetAlert.Blazor
         Task<DialogResult> Result { get; }
         object Dialog { get; }
         DialogOptions Options { get; }
+        Type Type { get; }
+
         internal void SetHeader(RenderFragment? header);
         internal void SetFooter(RenderFragment? footer);
     }

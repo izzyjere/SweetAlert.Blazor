@@ -10,11 +10,12 @@ namespace SweetAlert.Blazor
         public RenderFragment RenderFragment { get; private set; }
         private readonly TaskCompletionSource<DialogResult> _resultCompletion = new();
         private readonly IAlertService alertService;
-        internal SweetDialogReference(Guid id, IAlertService alertService, DialogOptions options)
+        internal SweetDialogReference(Guid id, IAlertService alertService, DialogOptions options, Type type)
         {
             Id = id;
             this.alertService = alertService;              
             Options = options;
+            Type = type;
         }
 
          public Task<DialogResult> Result { get=> _resultCompletion.Task; }
@@ -39,6 +40,8 @@ namespace SweetAlert.Blazor
         public RenderFragment? Header { get; private set; }
 
         public RenderFragment? Footer { get; private set; }
+
+        public Type Type { get;  }
 
         public void InjectDialog(object instance)
         {

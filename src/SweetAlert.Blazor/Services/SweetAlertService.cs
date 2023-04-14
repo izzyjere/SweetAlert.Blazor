@@ -43,9 +43,9 @@ namespace SweetAlert.Blazor.Services
         }
  
         
-       private ISweetDialogReference CreateReference(DialogOptions options)
+       private ISweetDialogReference CreateReference(DialogOptions options, Type contentComponent)
        {
-            return new SweetDialogReference(Guid.NewGuid(),this,options);
+            return new SweetDialogReference(Guid.NewGuid(),this,options,contentComponent);
        }
 
         public void Close(ISweetDialogReference instance)
@@ -71,7 +71,7 @@ namespace SweetAlert.Blazor.Services
            
             options ??= new DialogOptions();
             title ??= ""; 
-            var dialogReference = CreateReference(options);
+            var dialogReference = CreateReference(options, contentComponent);
             RenderFragment? dialogHeader = null;
             RenderFragment? dialogFooter = null;
             var dialogContent = DialogHelperComponent.Wrap(new RenderFragment(builder =>
