@@ -12,7 +12,7 @@ namespace SweetAlert.Blazor
         void Close(DialogResult dialogResult);
         bool Dismiss(DialogResult dialogResult);
         void InjectRenderFragment(RenderFragment fragment);
-        void InjectDialog(object instance);
+        internal void InjectDialog(object instance);
         Task<DialogResult> Result { get; }
         object Dialog { get; }
         DialogOptions Options { get; }

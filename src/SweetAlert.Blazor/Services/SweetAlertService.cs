@@ -105,7 +105,7 @@ namespace SweetAlert.Blazor.Services
             dialogReference.InjectRenderFragment(dialogInstance);
             dialogReference.SetFooter(dialogFooter);
             dialogReference.SetHeader(dialogHeader);
-            sweetAlertInterop.NotifyDialogInstanceAdded(dialogReference);           
+            sweetAlertInterop.NotifyDialogInstanceAdded(dialogReference, title);           
             return dialogReference;
         }
 

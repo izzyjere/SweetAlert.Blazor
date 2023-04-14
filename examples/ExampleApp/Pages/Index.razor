@@ -8,6 +8,7 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 <button @onclick="ShowAlert" class="btn btn-primary">Ask a question</button>
+<button @onclick="ShowComponent" class="btn btn-primary">Show a Component</button>
 @code{
     async void ShowAlert()
     {
@@ -16,5 +17,10 @@ Welcome to your new app.
         {
             await alertService.ShowAlert("Success", "Deleted!", Severity.Success);
         }
+    }
+    async void ShowComponent()
+    {
+        var dialog = alertService.Show<Counter>("Counter");
+        var result = await dialog.Result;
     }
 }

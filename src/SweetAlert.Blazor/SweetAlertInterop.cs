@@ -64,14 +64,15 @@ namespace SweetAlert.Blazor
 
             return html;
         }       
-        private async Task<bool> Dialog(RenderFragment content ,DialogOptions options, RenderFragment? header, RenderFragment? footer)
+        private async Task<bool> Dialog(RenderFragment content ,DialogOptions options, RenderFragment? header, RenderFragment? footer, string? title)
         { 
 
             var module = await moduleTask.Value;
 
             var swalOptions = new
             {
-                title = header==null?"":await ConvertBlazorComponentToHtml(header),
+                title = title??"",
+                header = header==null?"":await ConvertBlazorComponentToHtml(header),
                 footer = footer==null?"":await ConvertBlazorComponentToHtml(footer),
                 html = await ConvertBlazorComponentToHtml(content),
                 icon = options.Icon,
@@ -86,9 +87,10 @@ namespace SweetAlert.Blazor
            return await module.InvokeAsync<bool>("showAlertComplex", swalOptions);
         }
 
-        internal void NotifyDialogInstanceAdded(ISweetDialogReference alertReference)
+        internal async void NotifyDialogInstanceAdded(ISweetDialogReference alertReference,string? title)
         {
             //TODO: Opening Dialog implementation here.
+            await Dialog(alertReference.RenderFragment, alertReference.Options, alertReference.Header, alertReference.Footer, title);
             OnDialogInstanceAdded?.Invoke(alertReference);
         }
 
