@@ -1,10 +1,25 @@
-﻿<div id="sweet"></div>
+﻿<div class="sweet-dialog" id='@($"sweet-dialog-{Id}")'>
+    @if (DialogHeader is not null)
+    {
+        <div class="sweet-dialog-header" id='@($"sweet-dialog-header-{Id}")'>
+            @DialogHeader
+        </div>
+    }
+    <div class="sweet-dialog-content" id='@($"sweet-dialog-content-{Id}")'>
+        @DialogContent
+    </div>
+    @if(DialogFooter is not null)
+    {
+        <div class="sweet-dialog-footer" id='@($"sweet-dialog-footer-{Id}")'>
+            @DialogFooter
+        </div>
+    }
+</div>
 
 @code {
 
     [Parameter]public RenderFragment DialogContent { get; set; }
     [Parameter]public RenderFragment DialogFooter { get; set; }
-    [Parameter]public RenderFragment DialogHeader { get; set; } 
-    
+    [Parameter]public RenderFragment DialogHeader { get; set; }     
     [Parameter]public string Id { get; set; }
 }
