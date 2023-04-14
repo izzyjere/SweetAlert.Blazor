@@ -102,5 +102,7 @@ namespace SweetAlert.Blazor
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("showAlert", title, message, severity.ToString().ToLower());
         }
+
+      
     }
 }

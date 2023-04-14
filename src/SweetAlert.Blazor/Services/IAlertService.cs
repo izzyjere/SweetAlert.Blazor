@@ -6,7 +6,7 @@ namespace SweetAlert.Blazor.Services
     public interface IAlertService
     {
         void Close(ISweetDialogReference instance);
-        void Close(SweetDialogReference sweetAlertReference, DialogResult dialogResult);
+        void Close(ISweetDialogReference sweetAlertReference, DialogResult dialogResult);
 
         ISweetDialogReference Show<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>( string title, DialogOptions options) where TComponent : ComponentBase;
         ISweetDialogReference Show<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>( string title, DialogOptions options, DialogParameters parameters) where TComponent : ComponentBase;

@@ -50,12 +50,12 @@ namespace SweetAlert.Blazor.Services
 
         public void Close(ISweetDialogReference instance)
         {
-            throw new NotImplementedException();
+            Close(instance,DialogResult.Ok(null));
         }
 
-        public void Close(SweetDialogReference sweetAlertReference, DialogResult dialogResult)
+        public void Close(ISweetDialogReference sweetAlertReference, DialogResult dialogResult)
         {
-            throw new NotImplementedException();
+            sweetAlertInterop.NotifyDialogCloseRequested(sweetAlertReference, dialogResult);
         }
 
         public ISweetDialogReference Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title, DialogOptions options)         {
