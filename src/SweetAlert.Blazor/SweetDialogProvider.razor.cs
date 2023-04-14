@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SweetAlert.Blazor
 {
-    public partial class SweetAlertProvider 
+    public partial class SweetDialogProvider 
     {
         [Inject] SweetAlertInterop SweetAlertInterop { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
-        private Collection<ISweetDialogReference> sweetAlerts = new();
+        private Collection<ISweetDialogReference> sweetDialogs = new();
         protected override void OnInitialized()
         {
             Navigation.LocationChanged += LocationChanged;
@@ -32,24 +27,35 @@ namespace SweetAlert.Blazor
                 await SweetAlertInterop.Initialize();
             }
         }
-        private void AddInstance(ISweetDialogReference sweetAlert)
+        private void AddInstance(ISweetDialogReference sweetDialog)
         {
-            sweetAlerts.Add(sweetAlert);
+            sweetDialogs.Add(sweetDialog);
             StateHasChanged();
         }
         public void DismissAll()
         {
-            sweetAlerts.ToList().ForEach(r=>DismissInstance(r,DialogResult.Cancel()));
+            sweetDialogs.ToList().ForEach(r=>DismissInstance(r,DialogResult.Cancel()));
             StateHasChanged() ;
         }
         private void LocationChanged(object sender, LocationChangedEventArgs args)
         {
             DismissAll();
         }
-        private void DismissInstance(ISweetDialogReference sweetAlert, DialogResult result)
+        public void DismissInstance(ISweetDialogReference sweetDialog, DialogResult result)
         {
-            if (!sweetAlert.Dismiss(result)) return;
-            sweetAlerts.Remove(sweetAlert);
+            if (!sweetDialog.Dismiss(result)) return;
+            sweetDialogs.Remove(sweetDialog);
+            StateHasChanged();
+        }
+        public void DismissInstance(Guid id, DialogResult result)
+        {
+            var sweetDialog = sweetDialogs.FirstOrDefault(r => r.Id == id);
+            if(sweetDialog is null)
+            {
+                return;
+            }
+            if (!sweetDialog.Dismiss(result)) return;
+            sweetDialogs.Remove(sweetDialog);
             StateHasChanged();
         }
     }

@@ -18,8 +18,41 @@
 
 @code {
 
+    [Inject] public IAlertService AlertService { get; set; }
+    [CascadingParameter] SweetDialogInstance DialogInstance { get; set; }
+
     [Parameter]public RenderFragment DialogContent { get; set; }
     [Parameter]public RenderFragment DialogFooter { get; set; }
-    [Parameter]public RenderFragment DialogHeader { get; set; }     
-    [Parameter]public string Id { get; set; }
+    [Parameter]public RenderFragment DialogHeader { get; set; } 
+    [Parameter]public DialogOptions Options { get; set; }
+
+    private Guid Id { get; set; }
+
+    private ISweetDialogReference? dialogReference;
+
+    public ISweetDialogReference Show(string? title=null, DialogOptions? options = null)
+    {
+        if (dialogReference != null)
+        {
+            Close();
+        }
+        var parameters = new DialogParameters()
+        {
+            [nameof(DialogContent)] = DialogContent,
+            [nameof(DialogFooter)] = DialogFooter,
+            [nameof(DialogHeader)] = DialogHeader            
+        };
+        dialogReference = AlertService.Show<SweetDialog>(title: title, options: Options??options, parameters: parameters);
+       
+        return dialogReference;
+    }
+    public void Close(DialogResult? result = null)
+    {
+        if(dialogReference == null)
+        {
+            return;
+        }
+        dialogReference.Close(result);
+        dialogReference = null;
+    }
 }

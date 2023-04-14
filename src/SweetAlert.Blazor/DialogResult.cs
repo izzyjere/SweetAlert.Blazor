@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SweetAlert.Blazor
+﻿namespace SweetAlert.Blazor
 {
     public class DialogResult
     {
@@ -15,9 +9,9 @@ namespace SweetAlert.Blazor
             Data = data;
             Cancelled = cancel;
         }
-        internal static DialogResult Cancel() => new(default, true);
-        internal static DialogResult Ok() => new(default, false);
-        internal static DialogResult Ok(object data)=> new(data, false);
+        public static DialogResult Cancel() => new(default, true);
+        public static DialogResult Ok() => new(default, false);
+        public static DialogResult Ok(object? data)=> new(data, false);
         
     }
 }

@@ -64,15 +64,16 @@ namespace SweetAlert.Blazor
 
             return html;
         }       
-        public async Task<bool> Dialog(RenderFragment componentToRender, string title ,DialogOptions options)
+        public async Task<bool> Dialog(RenderFragment content ,DialogOptions options, RenderFragment? header, RenderFragment? footer)
         { 
 
             var module = await moduleTask.Value;
 
             var swalOptions = new
             {
-                title,
-                html = await ConvertBlazorComponentToHtml(componentToRender),
+                title = header==null?"":await ConvertBlazorComponentToHtml(header),
+                footer = footer==null?"":await ConvertBlazorComponentToHtml(footer),
+                html = await ConvertBlazorComponentToHtml(content),
                 icon = options.Icon,
                 showCancelButton = options.ShowCancelButton,
                 showCloseButton = options.ShowCloseButton,

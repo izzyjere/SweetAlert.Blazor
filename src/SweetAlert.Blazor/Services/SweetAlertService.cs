@@ -1,12 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.JSInterop;
-using Microsoft.AspNetCore.Components.RenderTree;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SweetAlert.Blazor.Services
@@ -66,18 +58,17 @@ namespace SweetAlert.Blazor.Services
             throw new NotImplementedException();
         }
 
-        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title, DialogOptions options)
-        {
-            return await Show(contentComponent, title, options,default);
+        public ISweetDialogReference Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title, DialogOptions options)         {
+            return Show(contentComponent, title, options,default);
         }
 
-        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string? title, DialogOptions? options, DialogParameters? parameters)
+        public ISweetDialogReference Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string? title, DialogOptions? options, DialogParameters? parameters)
         {
             if (!typeof(ComponentBase).IsAssignableFrom(contentComponent))
             {
                 throw new ArgumentException($"{contentComponent?.FullName} must be a Blazor Component");
             }
-            var alertReference = CreateReference();
+            var dialogReference = CreateReference();
             options ??= new DialogOptions();
             title ??= "";
             var dialogContent = DialogHelperComponent.Wrap(new RenderFragment(builder =>
@@ -91,38 +82,38 @@ namespace SweetAlert.Blazor.Services
                         builder.AddAttribute(i++, parameter.Key, parameter.Value);
                     }
                 }               
-                builder.AddComponentReferenceCapture(i++, inst => { alertReference.InjectDialog(inst); });
+                builder.AddComponentReferenceCapture(i++, inst => { dialogReference.InjectDialog(inst); });
                 builder.CloseComponent();
             }));
             var dialogInstance = new RenderFragment(builder =>
             {
-                builder.OpenComponent<SweetAlertInstance>(0);
-                builder.SetKey(alertReference.Id);
-                builder.AddAttribute(1, nameof(SweetAlertInstance.Options), options);
-                builder.AddAttribute(2, nameof(SweetAlertInstance.Title), title);
-                builder.AddAttribute(3, nameof(SweetAlertInstance.Content), dialogContent);
-                builder.AddAttribute(4, nameof(SweetAlertInstance.Id), alertReference.Id);
+                builder.OpenComponent<SweetDialogInstance>(0);
+                builder.SetKey(dialogReference.Id);
+                builder.AddAttribute(1, nameof(SweetDialogInstance.Options), options);
+                builder.AddAttribute(2, nameof(SweetDialogInstance.DialogHeader), title);
+                builder.AddAttribute(3, nameof(SweetDialogInstance.Content), dialogContent);
+                builder.AddAttribute(4, nameof(SweetDialogInstance.Id), dialogReference.Id);
                 builder.CloseComponent();
             });
-            alertReference.InjectRenderFragment(dialogInstance);
-            sweetAlertInterop.NotifyDialogInstanceAdded(alertReference);
-            var confirmed = await sweetAlertInterop.Dialog(alertReference.RenderFragment, title, options);
-            return alertReference;
+            dialogReference.Options = options;
+            dialogReference.InjectRenderFragment(dialogInstance);
+            sweetAlertInterop.NotifyDialogInstanceAdded(dialogReference);           
+            return dialogReference;
         }
 
-        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title)
+        public ISweetDialogReference Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title)
         {
-            return await Show(contentComponent, title,default,default);
+            return Show(contentComponent, title,default,default);
         }
 
-        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogParameters parameters)
+        public ISweetDialogReference Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogParameters parameters) 
         {
-            return await Show(contentComponent, default, default, parameters);
+            return Show(contentComponent, default, default, parameters);
         }
 
-        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogOptions options)
+        public ISweetDialogReference Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogOptions options) 
         {
-            return await Show(contentComponent,default, options,default);
+            return Show(contentComponent,default, options,default);
         }
 
         public Task<bool> ShowConfirm(string title, string message, Severity severity, AlertOptions? options = default)
@@ -134,6 +125,31 @@ namespace SweetAlert.Blazor.Services
         public Task ShowAlert(string title, string message, Severity severity)
         {
             return sweetAlertInterop.Alert(title,message,severity);
+        }
+
+        public ISweetDialogReference Show<[DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] TComponent>(string title, DialogOptions options) where TComponent : ComponentBase
+        {
+            return Show(typeof(TComponent),title,options);
+        }
+
+        public ISweetDialogReference Show<[DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] TComponent>(string title, DialogOptions options, DialogParameters parameters) where TComponent : ComponentBase
+        {
+            return Show(typeof(TComponent), title,options,parameters);
+        }
+
+        public ISweetDialogReference Show<[DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] TComponent>(string title) where TComponent : ComponentBase
+        {
+            return Show(typeof(TComponent), title);
+        }
+
+        public ISweetDialogReference Show<[DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] TComponent>(DialogParameters parameters) where TComponent : ComponentBase
+        {
+            return Show(typeof(TComponent),parameters);
+        }
+
+        public ISweetDialogReference Show<[DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] TComponent>(DialogOptions options) where TComponent : ComponentBase
+        {
+            return Show(typeof(TComponent),options);
         }
     }
 }
