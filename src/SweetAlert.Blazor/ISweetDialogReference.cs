@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SweetAlert.Blazor
 {
-    public interface ISweetAlertDialogReference
+    public interface ISweetDialogReference
     {
         Guid Id { get; }
         RenderFragment RenderFragment { get; }

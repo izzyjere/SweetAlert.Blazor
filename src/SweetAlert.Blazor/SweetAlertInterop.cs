@@ -11,8 +11,8 @@ namespace SweetAlert.Blazor
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
-        public event Action<ISweetAlertDialogReference> OnDialogInstanceAdded;
-        public event Action<ISweetAlertDialogReference, DialogResult> OnDialogCloseRequested;
+        public event Action<ISweetDialogReference> OnDialogInstanceAdded;
+        public event Action<ISweetDialogReference, DialogResult> OnDialogCloseRequested;
         public SweetAlertInterop(IJSRuntime jSRuntime)
         {
             moduleTask = new(() => jSRuntime.InvokeAsync<IJSObjectReference>(
@@ -85,7 +85,7 @@ namespace SweetAlert.Blazor
            return await module.InvokeAsync<bool>("showAlertComplex", swalOptions);
         }
 
-        internal void NotifyDialogInstanceAdded(ISweetAlertDialogReference alertReference)
+        internal void NotifyDialogInstanceAdded(ISweetDialogReference alertReference)
         {
             OnDialogInstanceAdded?.Invoke(alertReference);
         }

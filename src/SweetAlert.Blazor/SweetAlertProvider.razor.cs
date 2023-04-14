@@ -13,7 +13,7 @@ namespace SweetAlert.Blazor
     {
         [Inject] SweetAlertInterop SweetAlertInterop { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
-        private Collection<ISweetAlertDialogReference> sweetAlerts = new();
+        private Collection<ISweetDialogReference> sweetAlerts = new();
         protected override void OnInitialized()
         {
             Navigation.LocationChanged += LocationChanged;
@@ -32,7 +32,7 @@ namespace SweetAlert.Blazor
                 await SweetAlertInterop.Initialize();
             }
         }
-        private void AddInstance(ISweetAlertDialogReference sweetAlert)
+        private void AddInstance(ISweetDialogReference sweetAlert)
         {
             sweetAlerts.Add(sweetAlert);
             StateHasChanged();
@@ -46,7 +46,7 @@ namespace SweetAlert.Blazor
         {
             DismissAll();
         }
-        private void DismissInstance(ISweetAlertDialogReference sweetAlert, DialogResult result)
+        private void DismissInstance(ISweetDialogReference sweetAlert, DialogResult result)
         {
             if (!sweetAlert.Dismiss(result)) return;
             sweetAlerts.Remove(sweetAlert);

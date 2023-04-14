@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SweetAlert.Blazor
 {
-    public class DialogContent
+    public partial class DialogContent
     {
     }
 }

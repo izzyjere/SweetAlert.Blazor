@@ -10,13 +10,13 @@ namespace SweetAlert.Blazor.Services
 {
     public interface IAlertService
     {
-        void Close(ISweetAlertDialogReference instance);
-        void Close(SweetAlertReference sweetAlertReference, DialogResult dialogResult);
-        Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, string title, DialogOptions options);
-        Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, string title, DialogOptions options, DialogParameters parameters);
-        Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, string title);
-        Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, DialogParameters parameters);
-        Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, DialogOptions options);
+        void Close(ISweetDialogReference instance);
+        void Close(SweetDialogReference sweetAlertReference, DialogResult dialogResult);
+        Task<ISweetDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, string title, DialogOptions options);
+        Task<ISweetDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, string title, DialogOptions options, DialogParameters parameters);
+        Task<ISweetDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, string title);
+        Task<ISweetDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, DialogParameters parameters);
+        Task<ISweetDialogReference> Show([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type contentComponent, DialogOptions options);
         Task<bool> ShowConfirm(string title, string message, Severity severity, AlertOptions? options = default);
         Task ShowAlert(string title, string message, Severity severity);
     }

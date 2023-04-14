@@ -1,0 +1,10 @@
+﻿<div id="sweet"></div>
+
+@code {
+
+    [Parameter]public RenderFragment DialogContent { get; set; }
+    [Parameter]public RenderFragment DialogFooter { get; set; }
+    [Parameter]public RenderFragment DialogHeader { get; set; } 
+    
+    [Parameter]public string Id { get; set; }
+}

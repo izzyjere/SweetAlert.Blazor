@@ -51,27 +51,27 @@ namespace SweetAlert.Blazor.Services
         }
  
         
-       private ISweetAlertDialogReference CreateReference()
+       private ISweetDialogReference CreateReference()
        {
-            return new SweetAlertReference(Guid.NewGuid(),this);
+            return new SweetDialogReference(Guid.NewGuid(),this);
        }
 
-        public void Close(ISweetAlertDialogReference instance)
+        public void Close(ISweetDialogReference instance)
         {
             throw new NotImplementedException();
         }
 
-        public void Close(SweetAlertReference sweetAlertReference, DialogResult dialogResult)
+        public void Close(SweetDialogReference sweetAlertReference, DialogResult dialogResult)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title, DialogOptions options)
+        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title, DialogOptions options)
         {
             return await Show(contentComponent, title, options,default);
         }
 
-        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string? title, DialogOptions? options, DialogParameters? parameters)
+        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string? title, DialogOptions? options, DialogParameters? parameters)
         {
             if (!typeof(ComponentBase).IsAssignableFrom(contentComponent))
             {
@@ -110,17 +110,17 @@ namespace SweetAlert.Blazor.Services
             return alertReference;
         }
 
-        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title)
+        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, string title)
         {
             return await Show(contentComponent, title,default,default);
         }
 
-        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogParameters parameters)
+        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogParameters parameters)
         {
             return await Show(contentComponent, default, default, parameters);
         }
 
-        public async Task<ISweetAlertDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogOptions options)
+        public async Task<ISweetDialogReference> Show([DynamicallyAccessedMembers((DynamicallyAccessedMemberTypes)(-1))] Type contentComponent, DialogOptions options)
         {
             return await Show(contentComponent,default, options,default);
         }

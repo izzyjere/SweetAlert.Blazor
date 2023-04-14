@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace SweetAlert.Blazor
 {
-    public class SweetAlertReference : ISweetAlertDialogReference
+    public class SweetDialogReference : ISweetDialogReference
     {
         public Guid Id { get; }
 
         public RenderFragment RenderFragment { get; private set; }
         private readonly TaskCompletionSource<DialogResult> _resultCompletion = new();
         private readonly IAlertService alertService;
-        internal SweetAlertReference(Guid id, IAlertService alertService)
+        internal SweetDialogReference(Guid id, IAlertService alertService)
         {
             Id = id;
             this.alertService = alertService;           
